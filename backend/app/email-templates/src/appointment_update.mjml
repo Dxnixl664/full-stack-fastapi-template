@@ -1,0 +1,35 @@
+<mjml>
+  <mj-body background-color="#fafbfc">
+    <mj-section background-color="#fff" padding="40px 20px">
+      <mj-column vertical-align="middle" width="100%">
+        <mj-text align="center" padding="35px" font-size="20px" font-family="Arial, Helvetica, sans-serif" color="#333">{{ project_name }} - Appointment Updated</mj-text>
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555"><span>Hello {{ username }}</span></mj-text>
+
+        <!-- Content for client -->
+        {% if nutritionist_name %}
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">Your appointment with <strong>{{ nutritionist_name }}</strong> has been updated.</mj-text>
+        {% endif %}
+
+        <!-- Content for nutritionist -->
+        {% if client_name %}
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">Your appointment with <strong>{{ client_name }}</strong> has been updated.</mj-text>
+        {% endif %}
+
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">
+          <strong>New Date:</strong> {{ date }}<br/>
+          <strong>New Time:</strong> {{ start_time }} - {{ end_time }}<br/>
+          <strong>Status:</strong> {{ status }}
+        </mj-text>
+
+        <mj-button align="center" font-size="18px" background-color="#009688" border-radius="8px" color="#fff" href="{{ link }}" padding="15px 30px">View Appointment Details</mj-button>
+
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">Please make a note of these changes in your schedule.</mj-text>
+
+        <mj-divider border-color="#ccc" border-width="2px"></mj-divider>
+
+        <mj-text align="center" font-size="14px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">If you have any questions about this change, please contact us immediately.</mj-text>
+
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

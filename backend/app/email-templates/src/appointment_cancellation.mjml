@@ -1,0 +1,42 @@
+<mjml>
+  <mj-body background-color="#fafbfc">
+    <mj-section background-color="#fff" padding="40px 20px">
+      <mj-column vertical-align="middle" width="100%">
+        <mj-text align="center" padding="35px" font-size="20px" font-family="Arial, Helvetica, sans-serif" color="#333">{{ project_name }} - Appointment Cancelled</mj-text>
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555"><span>Hello {{ username }}</span></mj-text>
+
+        <!-- If the recipient cancelled the appointment -->
+        {% if cancelled_by_you %}
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">
+          You have cancelled your appointment scheduled for:
+        </mj-text>
+        {% endif %}
+
+        <!-- If the other party cancelled the appointment -->
+        {% if cancelled_by_other %}
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">
+          <strong>{{ other_name }}</strong> has cancelled the appointment scheduled for:
+        </mj-text>
+        {% endif %}
+
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">
+          <strong>Date:</strong> {{ date }}<br/>
+          <strong>Time:</strong> {{ start_time }} - {{ end_time }}
+        </mj-text>
+
+        {% if cancelled_by_other %}
+        <mj-text align="center" font-size="16px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">
+          If you wish to reschedule, please book a new appointment through the system.
+        </mj-text>
+        {% endif %}
+
+        <mj-button align="center" font-size="18px" background-color="#009688" border-radius="8px" color="#fff" href="{{ link }}" padding="15px 30px">Go to Dashboard</mj-button>
+
+        <mj-divider border-color="#ccc" border-width="2px"></mj-divider>
+
+        <mj-text align="center" font-size="14px" padding-left="25px" padding-right="25px" font-family="Arial, Helvetica, sans-serif" color="#555">If you have any questions about this cancellation, please contact us.</mj-text>
+
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

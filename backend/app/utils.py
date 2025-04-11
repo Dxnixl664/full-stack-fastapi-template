@@ -11,6 +11,7 @@ from jwt.exceptions import InvalidTokenError
 
 from app.core import security
 from app.core.config import settings
+from app.models import Appointment
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -121,3 +122,131 @@ def verify_password_reset_token(token: str) -> str | None:
         return str(decoded_token["sub"])
     except InvalidTokenError:
         return None
+
+
+def generate_appointment_email(
+        *, is_client: bool, appointment: Appointment, nutritionist_name: str = "", client_name: str = ""
+) -> EmailData:
+    """Generate an email for an appointment booking."""
+    if is_client:
+        # Email to client about their booking
+        project_name = settings.PROJECT_NAME
+        subject = f"{project_name} - Appointment Confirmation"
+        html_content = render_email_template(
+            template_name="appointment_confirmation.html",
+            context={
+                "project_name": settings.PROJECT_NAME,
+                "username": client_name,
+                "nutritionist_name": nutritionist_name,
+                "date": appointment.date.strftime("%A, %d %B %Y"),
+                "start_time": appointment.start_time.strftime("%H:%M"),
+                "end_time": appointment.end_time.strftime("%H:%M"),
+                "link": f"{settings.FRONTEND_HOST}/appointments/{appointment.id}",
+            },
+        )
+    else:
+        # Email to nutritionist about a new booking
+        project_name = settings.PROJECT_NAME
+        subject = f"{project_name} - New Appointment"
+        html_content = render_email_template(
+            template_name="appointment_notification.html",
+            context={
+                "project_name": settings.PROJECT_NAME,
+                "username": nutritionist_name,
+                "client_name": client_name,
+                "date": appointment.date.strftime("%A, %d %B %Y"),
+                "start_time": appointment.start_time.strftime("%H:%M"),
+                "end_time": appointment.end_time.strftime("%H:%M"),
+                "link": f"{settings.FRONTEND_HOST}/appointments/{appointment.id}",
+            },
+        )
+    return EmailData(html_content=html_content, subject=subject)
+
+
+def generate_appointment_update_email(
+        *, is_client: bool, appointment: Appointment, nutritionist_name: str = "", client_name: str = ""
+) -> EmailData:
+    """Generate an email for an appointment update."""
+    if is_client:
+        # Email to client about their appointment update
+        project_name = settings.PROJECT_NAME
+        subject = f"{project_name} - Appointment Updated"
+        html_content = render_email_template(
+            template_name="appointment_update.html",
+            context={
+                "project_name": settings.PROJECT_NAME,
+                "username": client_name,
+                "nutritionist_name": nutritionist_name,
+                "date": appointment.date.strftime("%A, %d %B %Y"),
+                "start_time": appointment.start_time.strftime("%H:%M"),
+                "end_time": appointment.end_time.strftime("%H:%M"),
+                "status": appointment.status,
+                "link": f"{settings.FRONTEND_HOST}/appointments/{appointment.id}",
+            },
+        )
+    else:
+        # Email to nutritionist about appointment update
+        project_name = settings.PROJECT_NAME
+        subject = f"{project_name} - Appointment Updated"
+        html_content = render_email_template(
+            template_name="appointment_update.html",
+            context={
+                "project_name": settings.PROJECT_NAME,
+                "username": nutritionist_name,
+                "client_name": client_name,
+                "date": appointment.date.strftime("%A, %d %B %Y"),
+                "start_time": appointment.start_time.strftime("%H:%M"),
+                "end_time": appointment.end_time.strftime("%H:%M"),
+                "status": appointment.status,
+                "link": f"{settings.FRONTEND_HOST}/appointments/{appointment.id}",
+            },
+        )
+    return EmailData(html_content=html_content, subject=subject)
+
+
+def generate_cancellation_email(
+        *,
+        is_client: bool,
+        appointment: Appointment,
+        nutritionist_name: str = "",
+        client_name: str = "",
+        cancelled_by_client: bool = True
+) -> EmailData:
+    """Generate an email for an appointment cancellation."""
+    if is_client:
+        # Email to client about their appointment cancellation
+        project_name = settings.PROJECT_NAME
+        subject = f"{project_name} - Appointment Cancelled"
+        html_content = render_email_template(
+            template_name="appointment_cancellation.html",
+            context={
+                "project_name": settings.PROJECT_NAME,
+                "username": client_name,
+                "nutritionist_name": nutritionist_name,
+                "date": appointment.date.strftime("%A, %d %B %Y"),
+                "start_time": appointment.start_time.strftime("%H:%M"),
+                "end_time": appointment.end_time.strftime("%H:%M"),
+                "cancelled_by_you": cancelled_by_client,
+                "cancelled_by_other": not cancelled_by_client,
+                "other_name": nutritionist_name,
+            },
+        )
+    else:
+        # Email to nutritionist about appointment cancellation
+        project_name = settings.PROJECT_NAME
+        subject = f"{project_name} - Appointment Cancelled"
+        html_content = render_email_template(
+            template_name="appointment_cancellation.html",
+            context={
+                "project_name": settings.PROJECT_NAME,
+                "username": nutritionist_name,
+                "client_name": client_name,
+                "date": appointment.date.strftime("%A, %d %B %Y"),
+                "start_time": appointment.start_time.strftime("%H:%M"),
+                "end_time": appointment.end_time.strftime("%H:%M"),
+                "cancelled_by_you": not cancelled_by_client,
+                "cancelled_by_other": cancelled_by_client,
+                "other_name": client_name,
+            },
+        )
+    return EmailData(html_content=html_content, subject=subject)
