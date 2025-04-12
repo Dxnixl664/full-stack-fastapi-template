@@ -11,7 +11,8 @@ from app.models import (
     AppointmentStatus, AppointmentUpdate, AppointmentsPublic,
     Message, UserType
 )
-from app.utils import send_email, generate_appointment_email
+from app.utils import send_email, generate_appointment_email, generate_appointment_update_email, \
+    generate_cancellation_email
 
 router = APIRouter(tags=["appointments"])
 

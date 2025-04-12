@@ -2,6 +2,7 @@ import uuid
 from datetime import date, datetime, timezone
 from typing import Any, List, Optional
 
+from sqlalchemy import and_
 from sqlmodel import Session, select, or_
 
 from app.core.security import get_password_hash, verify_password
@@ -189,7 +190,7 @@ def get_availabilities_by_date_range(
             # For recurring slots (need to check day of week)
             Availability.is_recurring == True,
             # For specific date slots
-            (
+            and_(
                 Availability.is_recurring == False,
                 Availability.specific_date >= start_date,
                 Availability.specific_date <= end_date
@@ -288,8 +289,10 @@ def get_appointments_by_date_range(
 ) -> List[Appointment]:
     """Get appointments within a date range, filtered by user and status."""
     statement = select(Appointment).where(
-        Appointment.date >= start_date,
-        Appointment.date <= end_date
+        and_(
+            Appointment.date >= start_date,
+            Appointment.date <= end_date
+        )
     )
 
     if nutritionist_id:
